@@ -1,0 +1,184 @@
+version: '3.8'
+
+services:
+  # MongoDB for User Service
+  mongodb-user:
+    image: mongo:latest
+    container_name: mongodb-user
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: userdb
+    volumes:
+      - mongodb-user-data:/data/db
+    networks:
+      - ecommerce-network
+
+  # MongoDB for Product Service
+  mongodb-product:
+    image: mongo:latest
+    container_name: mongodb-product
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: productdb
+    volumes:
+      - mongodb-product-data:/data/db
+    networks:
+      - ecommerce-network
+
+  # MongoDB for Media Service
+  mongodb-media:
+    image: mongo:latest
+    container_name: mongodb-media
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: mediadb
+    volumes:
+      - mongodb-media-data:/data/db
+    networks:
+      - ecommerce-network
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - ecommerce-network
+
+  # Kafka
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - ecommerce-network
+
+  # User Microservice
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@mongodb-user:27017/userdb?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8081
+    depends_on:
+      - mongodb-user
+      - kafka
+    networks:
+      - ecommerce-network
+    restart: on-failure
+
+  # Product Microservice
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@mongodb-product:27017/productdb?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8082
+      USER_SERVICE_URL: http://user-service:8081
+    depends_on:
+      - mongodb-product
+      - kafka
+      - user-service
+    networks:
+      - ecommerce-network
+    restart: on-failure
+
+  # Media Microservice
+  media-service:
+    build:
+      context: ./media-service
+      dockerfile: Dockerfile
+    container_name: media-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin123@mongodb-media:27017/mediadb?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8083
+      MAX_FILE_SIZE: 2MB
+    depends_on:
+      - mongodb-media
+      - kafka
+    networks:
+      - ecommerce-network
+    volumes:
+      - media-uploads:/app/uploads
+    restart: on-failure
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      USER_SERVICE_URL: http://user-service:8081
+      PRODUCT_SERVICE_URL: http://product-service:8082
+      MEDIA_SERVICE_URL: http://media-service:8083
+    depends_on:
+      - user-service
+      - product-service
+      - media-service
+    networks:
+      - ecommerce-network
+    restart: on-failure
+
+  # Angular Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - ecommerce-network
+
+volumes:
+  mongodb-user-data:
+  mongodb-product-data:
+  mongodb-media-data:
+  media-uploads:
+
+networks:
+  ecommerce-network:
+    driver: bridge
