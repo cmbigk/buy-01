@@ -1,0 +1,41 @@
+Remaining tasks to finish the project (ordered)
+
+1) Run Java upgrade tooling or perform manual compatibility fixes
+  - Run OpenRewrite / upgrade recipes if available, or manually update plugins and fix deprecated APIs for Java 21.
+
+2) Build & smoke-test `user-service` on Java 21
+  - Run `mvn clean package` inside `user-service` or `docker compose up --build user-service` and resolve any build/runtime issues.
+
+3) Implement `product-service`
+  - Spring Boot service with MongoDB, product CRUD, seller-only create/update/delete, and Dockerfile + compose entry.
+
+4) Implement `media-service`
+  - Spring Boot service for image uploads, validate file type and enforce 2MB limit, store metadata in MongoDB and files on disk/cloud.
+
+5) Implement ownership & authorization rules
+  - Ensure only the seller who created a product can modify/delete it and manage its media; enforce in services and security config.
+
+6) Add API Gateway and HTTPS plan
+  - Add API gateway routing (Spring Cloud Gateway / NGINX) and document/provide TLS setup (Let's Encrypt) for production.
+
+7) Implement Angular frontend
+  - Sign-in/up (client & seller), seller dashboard (product CRUD + image upload), product listing, and media manager.
+
+8) Finalize authentication & role enforcement
+  - JWT-based auth flows, role-based UI controls, secure token handling, and backend enforcement.
+
+9) Add tests and CI checks
+  - Unit and integration tests for role-based access, media upload constraints, and end-to-end smoke tests.
+
+10) Security hardening
+  - Ensure bcrypt password hashing, avoid returning sensitive fields, validate inputs, and add rate-limiting suggestions.
+
+11) Update docker-compose, docs, and run instructions
+  - Un-comment and wire new services in `docker-compose.yml`, update `README.md`, and add local & production run steps.
+
+12) Final verification & deployment steps
+  - Run full stack locally via Docker Compose, manually validate flows (signup, seller product mgmt, media upload), and prepare deployment notes.
+
+Notes
+- I updated the tracked todo list to reflect the remaining tasks. I can start any specific item you choose (e.g., build `user-service` now or scaffold `product-service`).
+
