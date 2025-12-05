@@ -1,12 +1,13 @@
 export interface User {
   id: string;
-  username: string;
   email: string;
+  firstName: string;
+  lastName: string;
   role: 'CLIENT' | 'SELLER';
-  fullName?: string;
   phone?: string;
-  address?: string;
   avatarUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface LoginRequest {

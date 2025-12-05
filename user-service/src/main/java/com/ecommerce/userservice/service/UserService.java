@@ -60,8 +60,9 @@ public class UserService {
         //}
         
         String token = jwtTokenProvider.generateToken(savedUser.getEmail());
+        UserResponse userResponse = mapToUserResponse(savedUser);
         
-        return new AuthResponse(token, savedUser.getId(), savedUser.getEmail(), savedUser.getRole().toString());
+        return new AuthResponse(token, userResponse);
     }
     
     public AuthResponse login(LoginRequest request) {
@@ -75,7 +76,8 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getRole().toString());
+        UserResponse userResponse = mapToUserResponse(user);
+        return new AuthResponse(token, userResponse);
     }
     
     public UserResponse getProfile(String email) {

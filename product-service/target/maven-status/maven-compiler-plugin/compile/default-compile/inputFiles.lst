@@ -1,0 +1,12 @@
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/ProductServiceApplication.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/controller/ProductController.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/exception/ResourceNotFoundException.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/exception/ErrorResponse.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/config/WebClientConfig.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/dto/ProductRequest.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/dto/ProductResponse.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/repository/ProductRepository.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/exception/GlobalExceptionHandler.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/model/Product.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/service/ProductService.java
+/Users/eliza.john/Desktop/buy-01/product-service/src/main/java/com/ecommerce/productservice/exception/UnauthorizedException.java
