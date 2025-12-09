@@ -3,6 +3,7 @@ package com.ecommerce.mediaservice.controller;
 import com.ecommerce.mediaservice.dto.MediaResponse;
 import com.ecommerce.mediaservice.service.MediaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ import java.util.List;
 public class MediaController {
     
     private final MediaService mediaService;
+    
+    @Value("${media.upload.dir}")
+    private String uploadDir;
     
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MediaResponse> uploadMedia(
@@ -57,18 +61,22 @@ public class MediaController {
         return ResponseEntity.noContent().build();
     }
     
-    @GetMapping("/files/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    @GetMapping("/files/{id}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String id) {
         try {
-            Path file = Paths.get("uploads/media/").resolve(filename);
+            // Get media metadata from database using the ID
+            MediaResponse mediaResponse = mediaService.getMediaById(id);
+            
+            // Resolve the actual file path
+            Path file = Paths.get(uploadDir).resolve(mediaResponse.getFilename());
             Resource resource = new UrlResource(file.toUri());
             
             if (resource.exists() || resource.isReadable()) {
                 return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType("image/jpeg"))
+                        .contentType(MediaType.parseMediaType(mediaResponse.getContentType()))
                         .body(resource);
             } else {
-                throw new RuntimeException("Could not read file: " + filename);
+                throw new RuntimeException("Could not read file: " + mediaResponse.getFilename());
             }
         } catch (Exception e) {
             throw new RuntimeException("Error: " + e.getMessage());
