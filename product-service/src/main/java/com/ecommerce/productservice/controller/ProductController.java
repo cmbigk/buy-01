@@ -22,8 +22,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
             @Valid @RequestBody ProductRequest request,
-            @RequestHeader("X-User-Email") String sellerEmail,
-            @RequestHeader("X-User-Id") String sellerId) {
+            @RequestHeader(value = "X-User-Email", required = false) String sellerEmail,
+            @RequestHeader(value = "X-User-Id", required = false) String sellerId) {
         ProductResponse response = productService.createProduct(request, sellerEmail, sellerId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -32,7 +32,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable String id,
             @Valid @RequestBody ProductRequest request,
-            @RequestHeader("X-User-Email") String sellerEmail) {
+            @RequestHeader(value = "X-User-Email", required = false) String sellerEmail) {
         ProductResponse response = productService.updateProduct(id, request, sellerEmail);
         return ResponseEntity.ok(response);
     }
@@ -40,7 +40,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(
             @PathVariable String id,
-            @RequestHeader("X-User-Email") String sellerEmail) {
+            @RequestHeader(value = "X-User-Email", required = false) String sellerEmail) {
         productService.deleteProduct(id, sellerEmail);
         return ResponseEntity.noContent().build();
     }
