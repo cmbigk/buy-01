@@ -22,6 +22,7 @@ export interface RegisterRequest {
   lastName: string;
   role: 'CLIENT' | 'SELLER';
   phone?: string;
+  avatarUrl?: string;
 }
 
 export interface AuthResponse {

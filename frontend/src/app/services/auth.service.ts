@@ -58,12 +58,27 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  isLoggedIn(): boolean {
+  isAuthenticated(): boolean {
     return !!this.getToken();
   }
 
   isSeller(): boolean {
     const user = this.getCurrentUser();
     return user?.role === 'SELLER';
+  }
+
+  isLoggedIn(): boolean {
+    return this.isAuthenticated();
+  }
+
+  uploadAvatar(file: File, email: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.post<any>('/api/media/upload', formData, {
+      headers: {
+        'X-User-Email': email
+      }
+    });
   }
 }

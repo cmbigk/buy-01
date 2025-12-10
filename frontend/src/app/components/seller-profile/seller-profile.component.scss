@@ -37,6 +37,25 @@
       border-radius: 50%;
       object-fit: cover;
       border: 4px solid #667eea;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .seller-avatar-placeholder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #667eea;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      
+      span {
+        color: white;
+        font-size: 48px;
+        font-weight: bold;
+      }
     }
 
     .seller-details {
@@ -49,9 +68,23 @@
       }
 
       p {
-        margin: 0;
+        margin: 5px 0;
         color: #666;
         font-size: 16px;
+      }
+
+      .seller-email {
+        color: #667eea;
+        font-size: 15px;
+        
+        strong {
+          color: #333;
+        }
+      }
+
+      .seller-products-count {
+        color: #888;
+        font-size: 14px;
       }
     }
   }

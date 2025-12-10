@@ -52,6 +52,34 @@
   }
 }
 
+.file-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  
+  &:hover {
+    border-color: #667eea;
+  }
+}
+
+.avatar-preview {
+  margin-top: 15px;
+  text-align: center;
+  
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .error-message {
   background: #fee;
   color: #c33;

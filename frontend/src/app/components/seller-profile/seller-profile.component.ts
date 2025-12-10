@@ -15,6 +15,7 @@ export class SellerProfileComponent implements OnInit {
   sellerProducts: Product[] = [];
   sellerName: string = '';
   sellerAvatar: string = '';
+  sellerEmail: string = '';
   loading = true;
   errorMessage = '';
 
@@ -46,6 +47,7 @@ export class SellerProfileComponent implements OnInit {
 
   loadSellerProducts(sellerEmail: string): void {
     this.loading = true;
+    this.sellerEmail = sellerEmail;
     this.productService.getProductsBySeller(sellerEmail).subscribe({
       next: (products) => {
         this.sellerProducts = products;

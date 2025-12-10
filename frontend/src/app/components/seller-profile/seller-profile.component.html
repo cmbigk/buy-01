@@ -3,9 +3,13 @@
     <button (click)="goBack()" class="btn-back">← Back to Products</button>
     <div class="seller-info" *ngIf="!loading && sellerName">
       <img *ngIf="sellerAvatar" [src]="sellerAvatar" [alt]="sellerName" class="seller-avatar-large" />
+      <div *ngIf="!sellerAvatar" class="seller-avatar-placeholder">
+        <span>{{ sellerName.charAt(0).toUpperCase() }}</span>
+      </div>
       <div class="seller-details">
         <h1>{{ sellerName }}'s Store</h1>
-        <p>{{ sellerProducts.length }} product(s) available</p>
+        <p class="seller-email"><strong>Email:</strong> {{ sellerEmail }}</p>
+        <p class="seller-products-count">{{ sellerProducts.length }} product(s) available</p>
       </div>
     </div>
   </div>

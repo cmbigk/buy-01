@@ -30,6 +30,8 @@ public class RegisterRequest {
     
     private String phone;
     
+    private String avatarUrl;
+    
     @NotNull(message = "Role is required")
     private UserRole role;
 }

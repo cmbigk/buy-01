@@ -71,6 +71,21 @@
         />
       </div>
 
+      <div class="form-group">
+        <label for="avatar">Profile Picture (Avatar)</label>
+        <input
+          type="file"
+          id="avatar"
+          name="avatar"
+          (change)="onAvatarSelected($event)"
+          accept="image/*"
+          class="file-input"
+        />
+        <div *ngIf="avatarPreview" class="avatar-preview">
+          <img [src]="avatarPreview" alt="Avatar preview" />
+        </div>
+      </div>
+
       <div class="error-message" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
