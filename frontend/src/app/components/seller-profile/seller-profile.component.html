@@ -1,0 +1,38 @@
+<div class="seller-profile-container">
+  <div class="seller-header">
+    <button (click)="goBack()" class="btn-back">← Back to Products</button>
+    <div class="seller-info" *ngIf="!loading && sellerName">
+      <img *ngIf="sellerAvatar" [src]="sellerAvatar" [alt]="sellerName" class="seller-avatar-large" />
+      <div class="seller-details">
+        <h1>{{ sellerName }}'s Store</h1>
+        <p>{{ sellerProducts.length }} product(s) available</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading seller products...</div>
+  
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="products-grid" *ngIf="!loading && sellerProducts.length > 0">
+    <div class="product-card" *ngFor="let product of sellerProducts">
+      <div class="product-image" *ngIf="product.imageIds && product.imageIds.length > 0">
+        <img [src]="getProductImage(product)" [alt]="product.name" />
+      </div>
+      <div class="product-info">
+        <h3>{{ product.name }}</h3>
+        <p class="product-category">{{ product.category }}</p>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="product-footer">
+          <span class="product-price">${{ product.price.toFixed(2) }}</span>
+          <span class="product-stock">Stock: {{ product.stock }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && sellerProducts.length === 0" class="no-products">
+    <p>This seller hasn't created any products yet.</p>
+    <button (click)="goBack()" class="btn-primary">Back to All Products</button>
+  </div>
+</div>

@@ -20,7 +20,10 @@
           <span class="product-price">${{ product.price.toFixed(2) }}</span>
           <span class="product-stock">Stock: {{ product.stock }}</span>
         </div>
-        <p class="product-seller">Seller: {{ product.sellerEmail }}</p>
+        <div class="product-seller-info">
+          <img *ngIf="product.sellerAvatar" [src]="product.sellerAvatar" [alt]="product.sellerName" class="seller-avatar" />
+          <span class="seller-name" (click)="goToSellerProfile(product.sellerId)">{{ product.sellerName }}</span>
+        </div>
       </div>
     </div>
   </div>

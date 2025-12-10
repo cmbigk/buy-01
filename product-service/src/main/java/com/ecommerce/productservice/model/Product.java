@@ -25,6 +25,8 @@ public class Product {
     private String category;
     private String sellerId;
     private String sellerEmail;
+    private String sellerName; // First name + Last name
+    private String sellerAvatar; // Avatar URL
     private List<String> imageIds = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

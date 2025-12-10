@@ -31,5 +31,7 @@ public class ProductRequest {
     @NotBlank(message = "Category is required")
     private String category;
     
+    private String sellerName;
+    private String sellerAvatar;
     private List<String> imageIds;
 }

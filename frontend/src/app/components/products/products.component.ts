@@ -53,4 +53,12 @@ export class ProductsComponent implements OnInit {
   goToDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
+
+  goToSellerProfile(sellerId: string): void {
+    // Get the seller from products array to pass email
+    const product = this.products.find(p => p.sellerId === sellerId);
+    if (product) {
+      this.router.navigate(['/seller', sellerId], { queryParams: { email: product.sellerEmail } });
+    }
+  }
 }

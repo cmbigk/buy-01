@@ -153,12 +153,16 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
+    const user = this.authService.getCurrentUser();
+    
     // Ensure price and stock are numbers and imageIds is an array
     const productData: ProductRequest = {
       ...this.productForm,
       price: Number(this.productForm.price),
       stock: Number(this.productForm.stock),
-      imageIds: this.productForm.imageIds || []
+      imageIds: this.productForm.imageIds || [],
+      sellerName: user ? `${user.firstName} ${user.lastName}` : 'Unknown Seller',
+      sellerAvatar: user?.avatarUrl || null
     };
 
     if (this.editMode && this.currentProductId) {

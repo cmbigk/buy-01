@@ -7,6 +7,8 @@ export interface Product {
   stock: number;
   sellerId: string;
   sellerEmail: string;
+  sellerName: string;
+  sellerAvatar?: string;
   imageIds: string[];
   createdAt: string;
   updatedAt: string;
@@ -18,5 +20,7 @@ export interface ProductRequest {
   price: number;
   category: string;
   stock: number;
+  sellerName?: string;
+  sellerAvatar?: string | null;
   imageIds?: string[];
 }

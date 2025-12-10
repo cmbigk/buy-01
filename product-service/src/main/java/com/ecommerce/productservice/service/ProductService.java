@@ -38,6 +38,8 @@ public class ProductService {
         product.setCategory(request.getCategory());
         product.setSellerId(sellerId);
         product.setSellerEmail(sellerEmail);
+        product.setSellerName(request.getSellerName()); // Set from request
+        product.setSellerAvatar(request.getSellerAvatar()); // Set from request
         product.setImageIds(request.getImageIds() != null ? request.getImageIds() : List.of());
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
@@ -133,6 +135,8 @@ public class ProductService {
                 product.getCategory(),
                 product.getSellerId(),
                 product.getSellerEmail(),
+                product.getSellerName(),
+                product.getSellerAvatar(),
                 product.getImageIds(),
                 product.getCreatedAt(),
                 product.getUpdatedAt()
