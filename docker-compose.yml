@@ -60,7 +60,7 @@ services:
 
   # Kafka
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
     depends_on:
       - zookeeper
@@ -74,6 +74,10 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     networks:
       - ecommerce-network
 
@@ -145,26 +149,39 @@ services:
       - media-uploads:/app/uploads
     restart: on-failure
 
-  # API Gateway - TO BE IMPLEMENTED
-  # api-gateway:
-  #   build:
-  #     context: ./api-gateway
-  #     dockerfile: Dockerfile
-  #   container_name: api-gateway
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     SERVER_PORT: 8080
-  #     USER_SERVICE_URL: http://user-service:8081
-  #     PRODUCT_SERVICE_URL: http://product-service:8082
-  #     MEDIA_SERVICE_URL: http://media-service:8083
-  #   depends_on:
-  #     - user-service
-  #     - product-service
-  #     - media-service
-  #   networks:
-  #     - ecommerce-network
-  #   restart: on-failure
+  # Eureka Service Discovery
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      SERVER_PORT: 8761
+    networks:
+      - ecommerce-network
+    restart: on-failure
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_PORT: 8080
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+      - user-service
+      - product-service
+      - media-service
+    networks:
+      - ecommerce-network
+    restart: on-failure
 
   # Angular Frontend - TO BE IMPLEMENTED
   # frontend:

@@ -32,14 +32,14 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping("/profile")
+    @GetMapping("/me")
     public ResponseEntity<UserResponse> getProfile(Authentication authentication) {
         String email = authentication.getName();
         UserResponse response = userService.getProfile(email);
         return ResponseEntity.ok(response);
     }
     
-    @PutMapping("/profile")
+    @PutMapping("/me")
     public ResponseEntity<UserResponse> updateProfile(
             @Valid @RequestBody UpdateProfileRequest request,
             Authentication authentication) {

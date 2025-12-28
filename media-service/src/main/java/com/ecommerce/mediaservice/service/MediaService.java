@@ -7,7 +7,9 @@ import com.ecommerce.mediaservice.repository.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,8 @@ public class MediaService {
     
     private final MediaRepository mediaRepository;
     private final Tika tika = new Tika();
+    @Autowired(required = false)
+    private KafkaTemplate<String, String> kafkaTemplate;
     
     @Value("${media.upload.dir}")
     private String uploadDir;
@@ -87,6 +91,12 @@ public class MediaService {
         
         Media savedMedia = mediaRepository.save(media);
         log.info("Media metadata saved: {} for product: {}", savedMedia.getId(), productId);
+        
+        // Publish event to Kafka
+        if (kafkaTemplate != null) {
+            String eventData = "IMAGE_UPLOADED:" + savedMedia.getId() + ":" + uploadedBy + ":" + (productId != null ? productId : "no-product");
+            kafkaTemplate.send("media-events", eventData);
+        }
         
         return mapToMediaResponse(savedMedia);
     }

@@ -8,6 +8,8 @@ import com.ecommerce.productservice.model.Product;
 import com.ecommerce.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,6 +24,8 @@ public class ProductService {
     
     private final ProductRepository productRepository;
     private final WebClient.Builder webClientBuilder;
+    @Autowired(required = false)
+    private KafkaTemplate<String, String> kafkaTemplate;
     
     public ProductResponse createProduct(ProductRequest request, String sellerEmail, String sellerId) {
         // Verify user is a seller by calling user-service
@@ -46,6 +50,11 @@ public class ProductService {
         
         Product savedProduct = productRepository.save(product);
         log.info("Product created: {} by seller: {}", savedProduct.getId(), sellerEmail);
+        
+        // Publish event to Kafka
+        if (kafkaTemplate != null) {
+            kafkaTemplate.send("product-events", "PRODUCT_CREATED:" + savedProduct.getId() + ":" + sellerEmail);
+        }
         
         return mapToProductResponse(savedProduct);
     }
@@ -72,6 +81,11 @@ public class ProductService {
         Product updatedProduct = productRepository.save(product);
         log.info("Product updated: {} by seller: {}", productId, sellerEmail);
         
+        // Publish event to Kafka
+        if (kafkaTemplate != null) {
+            kafkaTemplate.send("product-events", "PRODUCT_UPDATED:" + productId + ":" + sellerEmail);
+        }
+        
         return mapToProductResponse(updatedProduct);
     }
     
@@ -86,6 +100,11 @@ public class ProductService {
         
         productRepository.deleteById(productId);
         log.info("Product deleted: {} by seller: {}", productId, sellerEmail);
+        
+        // Publish event to Kafka
+        if (kafkaTemplate != null) {
+            kafkaTemplate.send("product-events", "PRODUCT_DELETED:" + productId + ":" + sellerEmail);
+        }
     }
     
     public ProductResponse getProductById(String productId) {

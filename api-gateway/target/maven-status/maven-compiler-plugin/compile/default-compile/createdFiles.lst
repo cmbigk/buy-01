@@ -1,0 +1,3 @@
+com\ecommerce\gateway\ApiGatewayApplication.class
+com\ecommerce\gateway\filter\JwtAuthenticationFilter.class
+com\ecommerce\gateway\filter\JwtAuthenticationFilter$Config.class
